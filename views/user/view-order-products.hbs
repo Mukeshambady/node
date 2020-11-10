@@ -1,0 +1,28 @@
+
+
+
+     <session>
+    <div class="container mt-3">     
+        <h1 class="text-center">Purchase List</h1> 
+        <hr> 
+            <div class="row ">
+                
+                {{#each products}}
+                <div class="col-md-4 p-3">
+                    <div class="card"  >
+                        <img class="card-img-top" src="/product-images/{{this.product._id}}.jpg" alt="Card image cap" style="height: 10rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">{{this.product.name}}</h5>
+                            <p>Price : {{this.product.price}}</p>
+                            <p class="card-text">{{this.product.description}}</p>
+                            <p class="card-text">Status : {{this.status}}</p>
+                        </div>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+      
+    </div>
+   
+      </session>
+

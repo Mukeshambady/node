@@ -1,0 +1,40 @@
+<session>
+  <div class="container">
+    <div class="row mt-3">
+      <a class="btn btn-success ml-auto " href="/admin/add-product">New Product</a>
+    </div>
+    <table class="table mt-3">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Title</th>
+          <th scope="col">Category</th>
+          <th scope="col">Description</th>
+          <th scope="col">Image</th>
+          <th scope="col">Price</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each products}}
+
+        <tr>
+          <th scope="row">{{ numbering @index}}</th>
+          <td>{{this.name}}</td>
+          <td>{{this.category}}</td>
+          <td>{{this.description}}</td>
+          <td><img src="/product-images/{{this._id}}.jpg" alt="image" class="img-thumbnail"
+              style="width:50px; height:50px;"> </td>
+               <td>{{this.price}}</td>
+          <td>
+            <a href="/admin/edit-product/{{this._id}}" class="btn btn-primary">Edit</a>
+            <a href="/admin/delete-product/{{this._id}}" class="btn btn-danger"
+              onclick="return confirm('Are you sure do you wnad to delete {{this.name}} ?')">Delete</a>
+          </td>
+         
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+</session>

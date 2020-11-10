@@ -1,0 +1,119 @@
+<session>
+    <div class="container">
+        <form id="checkout-form" action="">
+            <div class="row mt-5">
+                <div class="col-sm-6">
+                    <h5 class="text-center">Enetr Delivery Details</h1>
+                        <hr>
+                        <div class="form-group">
+                            <label for="Address">Address:</label>
+                            <input type="text" class="form-control" id="address" name="address">
+                            <label for="Pincode">Pincode:</label>
+                            <input type="number" class="form-control" id="pincode" name="pincode">
+                            <label for="Mobile">Mobile:</label>
+                            <input type="number" class="form-control" id="mobile" name="mobile">
+                            <input type="hidden" name="userId" value="{{user._id}}">
+                        </div>
+                </div>
+                <div class="col-sm-6 " style="border: 1px solid black;">
+
+                    <div class="panel panel-default pt-3">
+                        <div class="panel-heading">
+                            <h5>Total Amount: Rs. {{total}}</h5>
+                            <hr>
+                            <p>Payment Method</p>
+                        </div>
+                        <div class="panel-body">
+                            <div class="radio">
+                                <label><input type="radio" name="paymentMethod" value="cod" checked>COD</label>
+                            </div>
+                            <div class="radio">
+                                <label><input type="radio" name="paymentMethod" value="online">Online Payment</label>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="panel-footer">
+                            <button type="submit" class="btn btn-info float-right">Checkout</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</session>
+
+<script>
+    $("#checkout-form").submit((e) => {
+        e.preventDefault()
+        $.ajax({
+            url: '/place-order',
+            method: 'post',
+            data: $('#checkout-form').serialize(),
+            success: (response) => {
+                if (response.codSuccess) {
+                    location.href = '/order-success'
+                } else {
+
+                    razorpayPayment(response)
+                }
+
+
+            }
+        })
+    })
+
+    function razorpayPayment(order) {
+
+        var options = {
+            "key": "rzp_test_KWvH4bD4JuWd8e", // Enter the Key ID generated from the Dashboard
+            "amount": (parseInt(order.amount)*1000), // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+            "currency": "INR",
+            "name": "CrossRoads",
+            "description": "Test Transaction",
+            "image": "https://example.com/your_logo",
+            "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+            "handler": function (response) {
+
+                alert(response.razorpay_payment_id);
+                alert(response.razorpay_order_id);
+                alert(response.razorpay_signature)
+
+                verifyPayment(response, order)
+            },
+            "prefill": {
+                "name": "Gaurav Kumar",
+                "email": "gaurav.kumar@example.com",
+                "contact": "9999999999"
+            },
+            "notes": {
+                "address": "Razorpay Corporate Office"
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
+        var rzp1 = new Razorpay(options);
+        rzp1.on('payment.failed', function (response) {
+            alert(response.error.code);
+            alert(response.error.description);
+            alert(response.error.source);
+            alert(response.error.step);
+            alert(response.error.reason);
+            alert(response.error.metadata.order_id);
+            alert(response.error.metadata.payment_id);
+        });
+        rzp1.open();
+    }
+
+    function verifyPayment(payment, order) {
+
+        $.ajax({
+            url: '/verify-payment',
+            data: {
+                payment,
+                order
+            },
+            method: 'post'
+        })
+    }
+</script>
