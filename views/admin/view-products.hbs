@@ -1,9 +1,9 @@
 <session>
   <div class="container">
-    <div class="row mt-3">
+    <div class="row mt-3 mb-3">
       <a class="btn btn-success ml-auto " href="/admin/add-product">New Product</a>
     </div>
-    <table class="table mt-3">
+    <table class="table mt-3" id="table_id">
       <thead>
         <tr>
           <th scope="col">#</th>
@@ -38,3 +38,8 @@
     </table>
   </div>
 </session>
+<script>
+  $(document).ready( function () {
+    $('#table_id').DataTable();
+} );
+</script>
