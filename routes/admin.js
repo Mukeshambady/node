@@ -5,17 +5,62 @@ var productHelper = require('../helpers/product-helpers');
 const { response } = require('express');
 
 
+//middileware useed to check lgged In or Not
+const verifyLogin = (req, res, next) => {
+
+  if (req.session.adminLoginedIn) {
+    next()
+  } else {
+    res.redirect('admin/login')
+  }
+}
+/* GET Logout page. and session distroy*/
+router.get('/logout', (req, res) => {
+  req.session.adminLoginedIn = null
+  req.session.destroy()
+  res.redirect('/admin/login')
+})
+
+//admin Login get page
+router.get('/login',(req,res)=>{  
+  if (req.session.admin) {
+    res.redirect('/admin')
+  } else {
+    res.render('admin/login', {layout: false,'loginErr': req.session.asminLoginError });
+    req.session.adminLoginError = false
+  }
+})
+
+/* POST Login page. */
+router.post('/login', (req, res) => {
+  console.log(req.body);
+  if(req.body.email === 'admin@gmail.com' && req.body.password === '1234' ){
+    req.session.admin = {name:'admin',_id:0}
+        req.session.req.session.adminLoginedIn = true
+        req.session.adminLoginError = false
+        res.redirect('/admin')//calling the Home page
+  }else{
+    req.session.adminLoginError = true
+    res.redirect('admin/login')
+  }
+ 
+})
+//************************************************************************ */
+
 /* GET home page. */
-router.get("/", function (req, res) {
+router.get("/",verifyLogin, function (req, res,next) {
 
   productHelper.getAllProducts().then((products) => {
-    // console.log(products);
-    res.render('admin/view-products', { title: "Shoping - Cart", products, admin: true })
+   //let admin=req.session.admin
+    let admin =req.session.admin
+
+    res.render('admin/view-products', { title: "Shoping - Cart", products,  admin })
   })
 })
 
 router.get('/add-product', (req, res) => {
-  res.render('admin/add-product', { admin: true })
+  let admin=req.session.admin 
+  res.render('admin/add-product', {  admin })
 })
 
 //add one product
@@ -49,7 +94,7 @@ router.get('/edit-product/:id', async (req, res) => {
 
 //edit page POST
 router.post('/edit-product/:id', (req, res) => {
-  let id= req.params.id
+  let id = req.params.id
   productHelper.updateProduct(id, req.body).then(() => {
     res.redirect('/admin')
     if (req.files.image) {

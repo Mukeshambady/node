@@ -8,7 +8,8 @@ const { response } = require('express');
 
 //middileware useed to check lgged In or Not
 const verifyLogin = (req, res, next) => {
-  if (req.session.loggedIn) {
+ 
+  if (req.session.userLoggedIn) {
     next()
   } else {
     res.redirect('/login')
@@ -39,7 +40,7 @@ router.get('/', async function (req, res, next) {
 
 /* GET Login page. */
 router.get('/login', (req, res) => {
-  if (req.session.loggedIn) {
+  if (req.session.userLoggedIn) {
     res.redirect('/')
   } else {
     res.render('user/login', { 'loginErr': req.session.loginError })
@@ -64,8 +65,8 @@ router.get('/signup', (req, res) => {
 router.post('/signup', (req, res) => {
   usersHelper.doSignup(req.body).then((response) => {
     //console.log(response);
-    req.session.loggedIn = true
     req.session.user = response.user
+    req.session.userLoggedIn = true
     res.redirect('/')
   })
 })
@@ -74,7 +75,7 @@ router.post('/signup', (req, res) => {
 router.post('/login', (req, res) => {
   usersHelper.doLogin(req.body).then((response) => {
     if (response.status) {
-      req.session.loggedIn = true
+      req.session.userLoggedIn = true
       req.session.user = response.user
       res.redirect('/')//calling the Home page
     } else {
