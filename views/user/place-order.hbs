@@ -66,7 +66,7 @@
 
         var options = {
             "key": "rzp_test_KWvH4bD4JuWd8e", // Enter the Key ID generated from the Dashboard
-            "amount": (parseInt(order.amount)*1000), // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+            "amount": (parseInt(order.amount)), // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
             "currency": "INR",
             "name": "CrossRoads",
             "description": "Test Transaction",
@@ -74,10 +74,9 @@
             "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
             "handler": function (response) {
 
-               // alert(response.razorpay_payment_id);
-               // alert(response.razorpay_order_id);
-               // alert(response.razorpay_signature)
-
+                // alert(response.razorpay_payment_id);
+                // alert(response.razorpay_order_id);
+                // alert(response.razorpay_signature)
                 verifyPayment(response, order)
             },
             "prefill": {
@@ -114,10 +113,10 @@
                 order
             },
             method: 'post',
-            success:(data)=>{
-                if (data.status){
-                    location.href ='/order-success'
-                }else{
+            success: (data) => {
+                if (data.status) {
+                    location.href = '/order-success'
+                } else {
                     alert('Payment Fail')
                 }
             }
