@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const { response } = require('express');
 //rasorpay
 const Razorpay = require('razorpay');
-const collections = require('../config/collections');
+
 //Razorpay instance
 var instance = new Razorpay({
     key_id: 'rzp_test_KWvH4bD4JuWd8e',
