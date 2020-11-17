@@ -3,19 +3,21 @@ const mongoClient = require('mongodb').MongoClient
 const state = {
     db: null
 }
-
+//db connection
 module.exports.connect = function (done) {
     const url = 'mongodb://localhost:27017'
     const dbname = 'shopping'
+    mongoClient.connect(url, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    }, (err, data) => {
 
-    mongoClient.connect(url, (err, data) => {
         if (err) {
             return done(err)
         } else {
             state.db = data.db(dbname)
             done()
         }
-
     })
 }
 

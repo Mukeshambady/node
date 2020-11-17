@@ -1,7 +1,7 @@
 var db = require('../config/connection')
 var collection = require('../config/collections');
 const { Logger } = require('mongodb');
-const collections = require('../config/collections');
+
 const { response } = require('express');
 
 //object id declaration to compare(string converted to object)
@@ -58,9 +58,41 @@ module.exports = {
                     resolve()
                 })
         })
+    },
+
+
+    viewAllorders: () => {
+        return new Promise(async (resolve, reject) => {
+            let all_orders = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+
+                {
+                    $lookup: {
+                        from: collection.PRODUCT_COLLECTION,
+                        localField: 'products.item',
+                        foreignField: '_id',
+                        as: 'productDetails'
+                    }
+                },
+
+
+                {
+                    $lookup: {
+                        from: collection.USER_COLLECTION,
+                        localField: 'userId',
+                        foreignField: '_id',
+                        as: 'userDetails'
+                    }
+                },
+               
+                {
+                    $unwind: '$userDetails'
+                },
+
+            ]).toArray()
+            // console.log(all_orders);
+            resolve(all_orders)
+        })
     }
-
-
 
 
 
