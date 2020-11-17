@@ -3,6 +3,7 @@ const { route } = require('./admin');
 var router = express.Router();
 var productHelper = require('../helpers/product-helpers');
 const { response } = require('express');
+const { ReplSet } = require('mongodb');
 
 
 //middileware useed to check lgged In or Not
@@ -11,7 +12,7 @@ const verifyLogin = (req, res, next) => {
   if (req.session.adminLoginedIn) {
     next()
   } else {
-    res.redirect('admin/login')
+    res.redirect('/admin/login')
   }
 }
 /* GET Logout page. and session distroy*/
@@ -105,5 +106,24 @@ router.post('/edit-product/:id', (req, res) => {
     }
   })
 })
+
+
+///view  all-orders
+router.get('/all-orders',verifyLogin, (req, res) => {
+  let admin =req.session.admin
+  productHelper.viewAllorders().then((orders)=>{
+   res.render('admin/view-all-orders',{orders,admin})
+  })
+})
+
+///all-users
+///view  all-orders
+router.get('/all-users', (req, res) => {
+ 
+  productHelper.demo().then((orders)=>{
+   res.render('admin/view-all-users',{orders})
+  })
+})
+
 
 module.exports = router;

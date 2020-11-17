@@ -30,6 +30,9 @@ const chbs = hbs.create({
   helpers:{
     numbering:(value)=>{
       return value + 1
+    },
+    nothing:()=>{
+      return 'nothing helper'
     }
   }
 })
@@ -55,7 +58,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(fileUpload())
 app.use(session({
   secret: "Key",
-  cookie: { maxAge: 60000 }
+  cookie: { maxAge: 60000 },
+  resave: true,
+  saveUninitialized: true
 }))//session settings
 db.connect((err) => {
   if (err) console.log('Connection Error ' + err);

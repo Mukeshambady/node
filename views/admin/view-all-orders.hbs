@@ -1,0 +1,52 @@
+
+
+
+<session>
+    <div class="container">
+
+
+        <table class="table mt-3" id="table_id">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Product</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">MRP</th>
+                    <th scope="col">Total</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each orders}}
+
+                <tr>
+                    <th scope="row">{{numbering @index}}</th>
+                    <td scope="row">{{this.userDetails.name}}</td>
+
+                    <td scope="row">
+                        {{#each this.productDetails}}
+                        {{this.name}},
+                        {{/each}}
+                    </td>
+
+                    <td scope="row">{{#each this.products}}{{this.quantity}},{{/each}}</td>
+                    <td scope="row">{{#each this.productDetails}}{{this.price}},{{/each}}</td>
+                    <td scope="row">{{this.totalPrice}}</td>
+                    <td scope="row">{{this.date}}</td>
+                    <td scope="row">{{this.status}}</td>
+
+
+
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</session>
+<script>
+    $(document).ready(function () {
+        $('#table_id').DataTable();
+    });
+</script>
